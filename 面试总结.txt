@@ -1,0 +1,89 @@
+  1   实现多线程的两种方式
+    两种方式的区别 
+	1、继承Thread：由于子类重写父类的run(),当调用start()时，直接找子类的run()方法 
+	2、实现Runnable接口：Thread的构造函数中传入了Runnable引用，成员变量记住它，start()调用Thread中的run()方法时，判断成员变量Runnable的引用是否为空，不为空则在Thread的run()方法中调用Runnable的run()方法。编译看Runnable的run()，运行看子类run()方法。 
+	继承Thread：（首选这个，如果有了父类就用接口） 
+	好处是:直接使用Thread类中的方法，代码简单  
+	弊端是：如果已经有了父类，就不能使用这种方法 
+	实现Runnable接口： 
+	好处是：即使自己定义的线程类有了父类也没有关系，因为有了父类也可以实现接口，而接口是可以多实现的 
+	弊端是：不能直接使用Thread类中的方法，需要先获取到线程对象后，才能得到Thread的方法，代码复杂
+
+2   实现同步的几种方式
+	ReentrantLock可重入锁     lock.lock();    lock.unlock();
+	synchronized关键字    可加在方法体上 或者同步代码块上
+	wait/notifyAll 方式   Java中每个对象都拥有一个内置锁，在内置锁中调用wait，notify方法相当于调用锁的Condition条件对象的await和signalAll方法。
+	ThreadLocal 线程绑定对象    ThreadLocal是一种把变量放到线程本地的方式来实现线程同步的。
+	
+3   StringBuilder 和 StringBuffer区别?
+	StringBuilder 和 StringBuffer 都可以做字符串的拼接
+	StringBuilder 是线程不安全的   效率高
+	StringBuffer  是线程安全的（底层方法加synchronized 同步锁） 效率低
+	
+4 	文件上传需要注意什么?
+	1.项目中需要导入 commons-io commons-fileupload 两个jar包
+	2.表单的提交方式必须是post
+	3.表单的enctype属性必须为multipart/form-data
+	4 spring mvc 配置文件需要 配置 multipartResolver  
+	5 controller 用 MultipartFile 类型  接收文件对象。
+	
+5   struts2中的前置控制器是?如何配置?
+	StrutsPrepareAndExecuteFilter  配置filter标签  url-pattern 配置的是/*
+	
+6   类加载
+	概念：在ＪＶＭ第１次使用某个类时，先从classpath下找到对应的.class文件，
+	读取该文件中的所有内容(属性/方法/类名/包结构/构造/静态....)，并保存起来的过程，称为类加载。
+	类加载　在同一个ＪＶＭ中　只进行１次。
+	类加载的时机：第１次使用某个类时                                                
+	1)创建该类的对象
+	2)使用该类的静态成员（静态变量/静态方法）
+	3)创建子类对象　或　使用子类的静态成员
+	1.递归对父类　类加载１次
+	2.对子类　类加载１次
+	3.分配空间　所有实例变量　赋默认值
+	4.递归的创建父类对象
+	5.初始化本类属性　和　初始代码块　按定义的先后执行
+	6.调用本类构造方法
+
+	
+7   在Java中，类装载器把一个类装入JVM中，要经过以下步骤：
+
+	 (1) 装载：查找和导入Class文件；
+ 
+	 (2) 链接：把类的二进制数据合并到JRE中；
+
+		(a)校验：检查载入Class文件数据的正确性；
+
+		(b)准备：给类的静态变量分配存储空间；
+
+		(c)解析：将符号引用转成直接引用；
+
+	 (3) 初始化：对类的静态变量，静态代码块执行初始化操作
+	 
+	 
+8   JVM 垃圾回收机制与GC性能调优	 
+	1.JVM堆的大小决定了GC的运行时间。如果JVM堆的大小超过一定的限度，那么GC的运行时间会很长。
+	2.对象生存的时间越长，GC需要的回收时间也越长，影响了回收速度。
+	3.大多数对象都是短命的，所以，如果能让这些对象的生存期在GC的一次运行周期内，wonderful！
+	4.应用程序中，建立与释放对象的速度决定了垃圾收集的频率。
+	5.如果GC一次运行周期超过3-5秒，这会很影响应用程序的运行，如果可以，应该减少JVM堆的大小了。
+	6.前辈经验之谈：通常情况下，JVM堆的大小应为物理内存的80%。
+	
+	
+9   java 并发包类
+	1 ConcurrentHashMap
+		ConcurrentHashMap其实就是线程安全版本的hashMap。简单的解释就是通过把整个Map分为N个Segment（类似HashTable），
+		这样每个HashTable之间就线程就不会发生冲突，可以提供相同的线程安全，但是效率提升N倍，默认提升16倍。
+	2 CopyOnWriteArrayList
+	3 非阻塞队列：
+	ConcurrentLinkedDeque.class，非阻塞双端队列，链表实现 
+	ConcurrentLinkedQueue.class，非阻塞队列，链表实现
+
+10  jdbc中Statement 和 PreparedStatement 的区别?
+		Statement 是 PreparedStatement的 父接口 都可以执行sql语句
+		1.PreparedStatement比 Statement执行sql语句更快
+		2.PreparedStatement 使用?号占位  Statement 使用的字符串拼接
+		3.PreparedStatement可以防止SQL注入式攻击    Statement存在sql注入的风险
+	
+
+		
